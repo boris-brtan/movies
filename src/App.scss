@@ -1,47 +1,80 @@
-header {
-    .MuiIconButton-root {
-        color: inherit;
-    }
+#app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 
-    .search-input {
-        position: relative;
-        display: flex;
-        background-color: rgba(255, 255, 255, .15);
-        border-radius: 4px;
-        width: 100%;
-
-        &:hover {
-            background-color: rgba(255, 255, 255, .25);
-        }
-
-        .MuiIcon-root {
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: auto;
-            margin: auto;
-            padding: 0 8px;
-        }
-
-        .MuiInputBase-root {
+    header {
+        .MuiIconButton-root {
             color: inherit;
-            width: inherit;
-
-            .MuiInputBase-input {
-                color: inherit;
-                padding: 8px 8px 8px 40px;
-            }
-
         }
 
-        @media (min-width: 600px) {
-            width: 15ch;
-            transition: width .1s linear;
+        .favorite {
+            margin-left: -16px;
+        }
 
-            &:has(input.MuiInputBase-input:focus) {
-                width: 25ch;
+        .search-input {
+            position: relative;
+            display: flex;
+            background-color: rgba(255, 255, 255, .15);
+            border-radius: 4px;
+            width: 100%;
+
+            &:hover {
+                background-color: rgba(255, 255, 255, .25);
+            }
+
+            .MuiIcon-root {
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: auto;
+                margin: auto;
+                padding: 0 8px;
+            }
+
+            .MuiInputBase-root {
+                color: inherit;
+                width: inherit;
+
+                .MuiInputBase-input {
+                    color: inherit;
+                    padding: 8px 8px 8px 40px;
+                }
+
+            }
+
+            @media (min-width: 600px) {
+                width: 15ch;
+                transition: width .1s linear;
+
+                &:has(input.MuiInputBase-input:focus) {
+                    width: 25ch;
+                }
             }
         }
     }
+
+    main {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+
+        > * {
+            width: 100%;
+        }
+
+        .MuiAlert-root {
+            top: 65px;
+            position: fixed;
+            z-index: 1000;
+        }
+
+        .loader {
+            align-self: center;
+            margin: auto;
+        }
+    }
+
+    @import 'component';
 }

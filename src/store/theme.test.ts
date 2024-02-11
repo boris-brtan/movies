@@ -1,9 +1,8 @@
-import{ renderHook,waitFor }from '@testing-library/react'
+import { act, renderHook, waitFor } from '@testing-library/react'
 import { PaletteMode } from '@mui/material'
-import { act } from 'react-dom/test-utils'
 import { useThemeStore } from './theme'
 
-describe('functional theme', () => {
+describe('theme store', () => {
     it('should set theme palette to dark mode by default', () => {
         const { result } = renderHook(() => useThemeStore())
 

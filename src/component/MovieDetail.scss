@@ -1,0 +1,19 @@
+.detail {
+    flex: 1;
+
+    h2 {
+        display: flex;
+        align-items: center;
+
+        button:last-of-type {
+            margin-left: auto;
+        }
+    }
+
+    .poster {
+        width: auto;
+        max-height: 500px;
+        object-fit: contain;
+        margin-bottom: 16px;
+    }
+}

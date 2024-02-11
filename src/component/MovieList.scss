@@ -1,0 +1,27 @@
+.list-item {
+    position: relative;
+
+    > button {
+        min-height: 150px;
+    }
+
+    .MuiCardContent-root {
+        flex: 1
+    }
+
+    .MuiCardActions-root {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+    }
+}
+
+.empty-state {
+    height: auto;
+    margin: auto;
+    opacity: .7;
+
+    svg {
+        font-size: clamp(40px, 50vw, 50vh);
+    }
+}

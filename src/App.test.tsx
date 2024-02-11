@@ -1,14 +1,14 @@
-import React from 'react'
+import '@testing-library/jest-dom'
 import { act, cleanup, fireEvent, render, waitFor } from '@testing-library/react'
 import { App } from './App'
-import '@testing-library/jest-dom'
 
 describe('App component', () => {
     afterEach(cleanup)
 
     it('should render correctly', async () => {
         const { findByText } = render(<App />)
-        expect(await findByText('Project')).toBeDefined()
+        expect(await findByText('Movies & Tv shows')).toBeVisible()
+        expect(await findByText('No results available', { exact: false })).toBeVisible()
     })
 
     it('should switch theme pallete mode', async () => {

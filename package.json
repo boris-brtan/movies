@@ -8,7 +8,8 @@
         "lint-fix": "eslint --fix . *.mjs",
         "build": "tsc --noEmit && node esbuild.mjs",
         "serve": "node esbuild-serve.mjs",
-        "test": "jest src"
+        "test": "jest src",
+        "test-coverage": "jest --coverage src"
     },
     "author": "bbb",
     "license": "UNLICENSED",
