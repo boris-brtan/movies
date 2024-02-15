@@ -5,6 +5,8 @@ const ctx = await esbuild.context({
     entryPoints: ['src/index.tsx'],
     bundle: true,
     outdir: 'public/asset',
+    format: 'esm',
+    splitting: true,
     define: {
         'process.env.NODE_ENV': '"dev"',
         'process.env.API_KEY': '"23c661e5"',

@@ -6,6 +6,8 @@ await esbuild.build({
     color: true,
     drop: ['console'],
     entryPoints: ['src/index.tsx'],
+    format: 'esm',
+    splitting: true,
     minify: true,
     outdir: 'public/asset',
     define: {

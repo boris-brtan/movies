@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom'
 import { cleanup, render } from '@testing-library/react'
-import { MovieDetail } from './MovieDetail'
+import MovieDetail from './MovieDetail'
 import { useMovieStore } from '../store'
 import { Movie } from '../api'
 

@@ -12,7 +12,7 @@ import { Loader } from './Loader'
 /**
  * Renders retrieved movie or tv show info.
  */
-export const MovieDetail = function MovieDetail() {
+export default function MovieDetail() {
     const { id } = useParams()
     const [movie, fetchMovie] = useMovieStore(state => [state.movie, state.fetchMovie])
     const [isFavorite, toggleFavorite] = useFavoriteStore(state => [

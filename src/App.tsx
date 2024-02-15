@@ -1,12 +1,15 @@
-import { KeyboardEvent, useCallback, useMemo } from 'react'
+import { KeyboardEvent, Suspense, lazy, useCallback, useMemo } from 'react'
 import { Route, HashRouter as Router, Routes } from 'react-router-dom'
 import { DarkMode, LightMode, Search, Star, StarBorder } from '@mui/icons-material'
 import { Alert, AppBar, Badge, Box, CssBaseline, Icon, IconButton, InputBase, ThemeProvider, Toolbar, Tooltip, Typography, createTheme } from '@mui/material'
 import { useFavoriteStore, useMovieStore, useThemeStore } from './store'
 import { useRedirect } from './util'
-import { FavoriteList, MovieList } from './component/MovieList'
-import { MovieDetail } from './component/MovieDetail'
 import './App.scss'
+import { Loader } from './component/Loader'
+
+const FavoriteList = lazy(() => import('./component/FavoriteList'))
+const MovieDetail = lazy(() => import('./component/MovieDetail'))
+const MovieList = lazy(() => import('./component/MovieList'))
 
 function PaletteModeButton() {
     const [mode, toggleMode] = useThemeStore((state) => [state.mode, () => state.toggleMode()])
@@ -90,11 +93,13 @@ export function App() {
             </AppBar>
             <main>
                 <ErrorBox />
-                <Routes>
-                    <Route path="/" element={<MovieList />} />
-                    <Route path="/favorite" element={<FavoriteList />} />
-                    <Route path="/movie/:id" element={<MovieDetail />} />
-                </Routes>
+                <Suspense fallback={<Loader />}>
+                    <Routes>
+                        <Route path="/" element={<MovieList />} />
+                        <Route path="/favorite" element={<FavoriteList />} />
+                        <Route path="/movie/:id" element={<MovieDetail />} />
+                    </Routes>
+                </Suspense>
             </main>
         </Router>
     </ThemeProvider>
