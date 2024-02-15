@@ -24,10 +24,11 @@ export const MovieDetail = function MovieDetail() {
     }, [movie?.imdbID])
 
     useEffect(() => {
-        if (movie?.imdbID !== id) {
+        // use non-reactive movie getter to call endpoint just once
+        if (useMovieStore.getState().movie?.imdbID !== id) {
             fetchMovie(id)
         }
-    }, [fetchMovie, id, movie?.imdbID])
+    }, [fetchMovie, id])
 
     if (!movie) {
         return <Loader />
