@@ -1,10 +1,11 @@
 import { useCallback } from 'react'
+import { useShallow } from 'zustand/react/shallow'
+import { Box, Card, CardActionArea, CardActions, CardContent, IconButton, Typography } from '@mui/material'
+import { Star, StarBorder } from '@mui/icons-material'
 import { MovieItem } from '../api'
 import { useFavoriteStore } from '../store'
 import { useRedirect } from '../util'
-import { Box, Card, CardActionArea, CardActions, CardContent, IconButton, Typography } from '@mui/material'
 import { Poster } from './Poster'
-import { Star, StarBorder } from '@mui/icons-material'
 
 /**
  * Renders item for {@link MovieList} or {@link FavoriteList}.
@@ -12,10 +13,10 @@ import { Star, StarBorder } from '@mui/icons-material'
  * @param item movie or tv show list item data
  */
 export function MovieCard(item: MovieItem) {
-    const [isFavorite, toggleFavorite] = useFavoriteStore((state) => [
+    const [isFavorite, toggleFavorite] = useFavoriteStore(useShallow((state) => [
         state.isFavorite(item),
         () => state.toggleFavorite(item),
-    ])
+    ]))
     const redirect = useRedirect()
     const onCardClick = useCallback(() => redirect('/movie/' + item.imdbID), [item.imdbID, redirect])
 

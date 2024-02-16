@@ -1,18 +1,19 @@
 import { KeyboardEvent, Suspense, lazy, useCallback, useMemo } from 'react'
+import { useShallow } from 'zustand/react/shallow'
 import { Route, HashRouter as Router, Routes } from 'react-router-dom'
 import { DarkMode, LightMode, Search, Star, StarBorder } from '@mui/icons-material'
 import { Alert, AppBar, Badge, Box, CssBaseline, Icon, IconButton, InputBase, ThemeProvider, Toolbar, Tooltip, Typography, createTheme } from '@mui/material'
 import { useFavoriteStore, useMovieStore, useThemeStore } from './store'
 import { useRedirect } from './util'
-import './App.scss'
 import { Loader } from './component/Loader'
+import './App.scss'
 
 const FavoriteList = lazy(() => import('./component/FavoriteList'))
 const MovieDetail = lazy(() => import('./component/MovieDetail'))
 const MovieList = lazy(() => import('./component/MovieList'))
 
 function PaletteModeButton() {
-    const [mode, toggleMode] = useThemeStore((state) => [state.mode, () => state.toggleMode()])
+    const [mode, toggleMode] = useThemeStore(useShallow((state) => [state.mode, () => state.toggleMode()]))
 
     return <Tooltip title={`change to ${mode === 'dark' ? 'light' : 'dark'} theme mode`}>
         <IconButton onClick={toggleMode}>

@@ -1,5 +1,6 @@
 import { Block } from '@mui/icons-material'
 import { Button, Icon, Typography } from '@mui/material'
+import { useShallow } from 'zustand/react/shallow'
 import { useMovieStore } from '../store/movie'
 import { MovieCard } from './MovieCard'
 
@@ -18,7 +19,7 @@ function EmptyBox() {
  * Renders list of retrieved movies or tv shows.
  */
 export default function MovieList(): JSX.Element {
-    const [movies, hasNextPage] = useMovieStore(state => [state.movies, state.totalResults > state.page * 10])
+    const [movies, hasNextPage] = useMovieStore(useShallow(state => [state.movies, state.totalResults > state.page * 10]))
 
     if (!movies.length) {
         return <EmptyBox />

@@ -9,10 +9,9 @@ import { useState } from 'react'
  */
 export function Poster({ src }: { src: string }) {
     const [loadState, setLoadState] = useState<'load' | 'fallback' | ''>(src === 'N/A' ? 'fallback' : 'load')
-    const shouldDisplayFallback = ['load', 'fallback'].includes(loadState)
 
     return <>
-        {shouldDisplayFallback &&
+        {['load', 'fallback'].includes(loadState) &&
             <Icon className="poster">
                 {loadState === 'load' && <CircularProgress />}
                 <LocalMovies />

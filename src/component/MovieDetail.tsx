@@ -1,12 +1,13 @@
 import { useCallback, useEffect } from 'react'
 import { pick } from 'lodash'
-import { useMovieStore } from '../store/movie'
 import { useParams } from 'react-router-dom'
+import { useShallow } from 'zustand/react/shallow'
 import { Button, Card, CardContent, IconButton, Rating, Typography } from '@mui/material'
 import { Poster } from './Poster'
 import { Star, StarBorder } from '@mui/icons-material'
-import { useFavoriteStore } from '../store/favorite'
 import { MovieItem } from '../api'
+import { useMovieStore } from '../store/movie'
+import { useFavoriteStore } from '../store/favorite'
 import { Loader } from './Loader'
 
 /**
@@ -14,11 +15,11 @@ import { Loader } from './Loader'
  */
 export default function MovieDetail() {
     const { id } = useParams()
-    const [movie, fetchMovie] = useMovieStore(state => [state.movie, state.fetchMovie])
-    const [isFavorite, toggleFavorite] = useFavoriteStore(state => [
+    const [movie, fetchMovie] = useMovieStore(useShallow(state => [state.movie, state.fetchMovie]))
+    const [isFavorite, toggleFavorite] = useFavoriteStore(useShallow(state => [
         state.isFavorite(movie),
         () => state.toggleFavorite(pick<MovieItem>(movie, 'Type', 'imdbID', 'Title', 'Year', 'Poster') as MovieItem),
-    ])
+    ]))
     const onImdbClick = useCallback(() => {
         window.location.href = '//www.imdb.com/title/' + movie?.imdbID
     }, [movie?.imdbID])
