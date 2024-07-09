@@ -1,3 +1,3 @@
-export * from './favorite'
-export * from './movie'
-export * from './theme'
+export * from './favoriteAtom'
+export * from './movieAtom'
+export * from './themeAtom'

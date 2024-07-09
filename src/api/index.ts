@@ -64,12 +64,13 @@ export async function fetchMovie(id: string): Promise<FetchMovieResult> {
  * Retrieves list of matched movies or tv shows.
  *
  * @param search pattern for matched movies or tv show
+ * @param signal request abort mechanism
  * @param page offset of result set
  *
  * @returns list of matched movies or tv shows
  */
-export async function fetchMovies(search: string, page = 1): Promise<FetchMoviesResult> {
-    const response = await fetch(`${apiURL}&s=${search}&page=${page}`)
+export async function fetchMovies(search: string, signal?: AbortSignal, page = 1): Promise<FetchMoviesResult> {
+    const response = await fetch(`${apiURL}&s=${search}&page=${page}`, { signal })
 
     return await response.json()
 }

@@ -1,12 +1,13 @@
 import { act, renderHook, waitFor } from '@testing-library/react'
 import { PaletteMode } from '@mui/material'
-import { useThemeStore } from './theme'
+import { useAtom, useAtomValue } from 'jotai'
+import { themeAtom } from './themeAtom'
 
 describe('theme store', () => {
     it('should set theme palette to dark mode by default', () => {
-        const { result } = renderHook(() => useThemeStore())
+        const { result } = renderHook(() => useAtomValue(themeAtom))
 
-        expect(result.current.mode).toEqual('dark')
+        expect(result.current).toEqual('dark')
     })
 
     it.each([
@@ -15,14 +16,16 @@ describe('theme store', () => {
         ['light', undefined],
         ['dark', undefined],
     ] as PaletteMode[][])('should toggle current theme palette to %s mode', async (resultMode, mode) => {
-        const { result } = renderHook(() => useThemeStore())
+        const { result } = renderHook(() => useAtom(themeAtom))
 
         act(() => {
-            result.current.toggleMode(mode)
+            const [, toggleMode] = result.current
+            toggleMode(mode)
         })
 
         await waitFor(() => {
-            expect(result.current.mode).toEqual(resultMode)
+            const [mode] = result.current
+            expect(mode).toEqual(resultMode)
         })
     })
 })

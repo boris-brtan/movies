@@ -1,9 +1,9 @@
 import { KeyboardEvent, Suspense, lazy, useCallback, useMemo } from 'react'
-import { useShallow } from 'zustand/react/shallow'
 import { Route, HashRouter as Router, Routes } from 'react-router-dom'
+import { useAtom, useAtomValue } from 'jotai'
 import { DarkMode, LightMode, Search, Star, StarBorder } from '@mui/icons-material'
 import { Alert, AppBar, Badge, Box, CssBaseline, Icon, IconButton, InputBase, ThemeProvider, Toolbar, Tooltip, Typography, createTheme } from '@mui/material'
-import { useFavoriteStore, useMovieStore, useThemeStore } from './store'
+import { errorAtom, favoriteAtom, moviesAtom, searchAtom, themeAtom } from './store'
 import { useRedirect } from './util'
 import { Loader } from './component/Loader'
 import './App.scss'
@@ -13,24 +13,27 @@ const MovieDetail = lazy(() => import('./component/MovieDetail'))
 const MovieList = lazy(() => import('./component/MovieList'))
 
 function PaletteModeButton() {
-    const [mode, toggleMode] = useThemeStore(useShallow((state) => [state.mode, () => state.toggleMode()]))
+    const [mode, toggleMode] = useAtom(themeAtom)
+    const toggleModeHandler = useCallback(() => toggleMode(), [toggleMode])
 
     return <Tooltip title={`change to ${mode === 'dark' ? 'light' : 'dark'} theme mode`}>
-        <IconButton onClick={toggleMode}>
+        <IconButton onClick={toggleModeHandler}>
             {mode === 'dark' ? <DarkMode /> : <LightMode />}
         </IconButton>
     </Tooltip>
 }
 
 function SearchBox() {
-    const initialSearch = useMovieStore((state) => state.search)
+    const [initialSearch, setSearch] = useAtom(searchAtom)
+    const { refetch } = useAtomValue(moviesAtom)
     const redirect = useRedirect()
     const onSearch = useCallback(({ key, target }: KeyboardEvent<HTMLInputElement> & { target: HTMLInputElement }) => {
         if (key === 'Enter') {
-            useMovieStore.getState().fetchMovies(target.value)
+            setSearch(target.value)
+            refetch()
             redirect('/')
         }
-    }, [redirect])
+    }, [redirect, refetch, setSearch])
 
     return <Box className="search-input">
         <Icon><Search /></Icon>
@@ -39,7 +42,7 @@ function SearchBox() {
 }
 
 function FavoriteLink() {
-    const favoriteCount = useFavoriteStore((state) => state.favorites.length)
+    const favoriteCount = useAtomValue(favoriteAtom).length
     const redirect = useRedirect()
     const gotoFavoriteList = useCallback(() => redirect('/favorite'), [redirect])
 
@@ -61,9 +64,9 @@ function FavoriteLink() {
 }
 
 function ErrorBox() {
-    const error = useMovieStore(state => state.error)
+    const error = useAtomValue(errorAtom)
 
-    if (!error) {
+    if (typeof error !== 'string') {
         return <></>
     }
 
@@ -71,7 +74,7 @@ function ErrorBox() {
 }
 
 export function App() {
-    const mode = useThemeStore((state) => state.mode)
+    const mode = useAtomValue(themeAtom)
     const theme = useMemo(() => createTheme({ palette: { mode } }), [mode])
 
     return <ThemeProvider theme={theme}>

@@ -1,35 +1,44 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { pick } from 'lodash'
 import { useParams } from 'react-router-dom'
-import { useShallow } from 'zustand/react/shallow'
 import { Button, Card, CardContent, IconButton, Rating, Typography } from '@mui/material'
 import { Poster } from './Poster'
 import { Star, StarBorder } from '@mui/icons-material'
 import { MovieItem } from '../api'
-import { useMovieStore } from '../store/movie'
-import { useFavoriteStore } from '../store/favorite'
 import { Loader } from './Loader'
+import { useAtomValue, useSetAtom } from 'jotai'
+import { favoriteAtom, isFavorite, movieAtom, movieIdAtom } from '../store'
+import { selectAtom } from 'jotai/utils'
 
 /**
  * Renders retrieved movie or tv show info.
  */
 export default function MovieDetail() {
     const { id } = useParams()
-    const [movie, fetchMovie] = useMovieStore(useShallow(state => [state.movie, state.fetchMovie]))
-    const [isFavorite, toggleFavorite] = useFavoriteStore(useShallow(state => [
-        state.isFavorite(movie),
-        () => state.toggleFavorite(pick<MovieItem>(movie, 'Type', 'imdbID', 'Title', 'Year', 'Poster') as MovieItem),
-    ]))
+    const { data: movie } = useAtomValue(movieAtom)
+    const fetchMovie = useSetAtom(movieIdAtom)
+    const toggleFavorite = useSetAtom(favoriteAtom)
+    const toggleFavoriteHandler = useCallback(
+        () => toggleFavorite(pick<MovieItem>(movie, 'Type', 'imdbID', 'Title', 'Year', 'Poster') as MovieItem),
+        [movie, toggleFavorite],
+    )
+    const isFavoriteMovie = useAtomValue(
+        useMemo(() => selectAtom(
+            favoriteAtom,
+            () => isFavorite(movie),
+        ), [movie]),
+    )
     const onImdbClick = useCallback(() => {
-        window.location.href = '//www.imdb.com/title/' + movie?.imdbID
+        if (movie?.imdbID) {
+            window.location.href = '//www.imdb.com/title/' + movie?.imdbID
+        }
     }, [movie?.imdbID])
 
     useEffect(() => {
-        // use non-reactive movie getter to call endpoint just once
-        if (useMovieStore.getState().movie?.imdbID !== id) {
+        if (movie?.imdbID !== id) {
             fetchMovie(id)
         }
-    }, [fetchMovie, id])
+    }, [fetchMovie, id, movie])
 
     if (!movie) {
         return <Loader />
@@ -39,8 +48,8 @@ export default function MovieDetail() {
         <CardContent>
             <Typography gutterBottom variant="h5" component="h2">
                 {movie.Title}
-                <IconButton size="large" color="warning" title="Add to favorites" onClick={toggleFavorite}>
-                    {isFavorite ? <Star /> : <StarBorder />}
+                <IconButton size="large" color="warning" title="Add to favorites" onClick={toggleFavoriteHandler}>
+                    {isFavoriteMovie ? <Star /> : <StarBorder />}
                 </IconButton>
                 <Button variant="contained" color="warning" onClick={onImdbClick}>IMDb</Button>
             </Typography>

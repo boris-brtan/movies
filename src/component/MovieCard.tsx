@@ -1,25 +1,24 @@
-import { memo, useCallback } from 'react'
-import { useShallow } from 'zustand/react/shallow'
+import { memo, useCallback, useMemo } from 'react'
+import { useAtomValue, useSetAtom } from 'jotai'
+import { selectAtom } from 'jotai/utils'
 import { Box, Card, CardActionArea, CardActions, CardContent, IconButton, Typography } from '@mui/material'
 import { Star, StarBorder } from '@mui/icons-material'
 import { MovieItem } from '../api'
-import { useFavoriteStore } from '../store'
 import { useRedirect } from '../util'
 import { Poster } from './Poster'
+import { favoriteAtom, isFavorite } from '../store'
 
-function FavoriteButton(props: MovieItem) {
-    const [isFavorite, toggleFavorite] = useFavoriteStore(useShallow((state) => [
-        state.isFavorite(props),
-        state.toggleFavorite,
-    ]))
+function FavoriteButton(movie: MovieItem) {
+    const toggleFavorite = useSetAtom(favoriteAtom)
+    const isFavoriteMovie = useAtomValue(useMemo(() => selectAtom(favoriteAtom, () => isFavorite(movie)), [movie]))
 
     return <IconButton
         size="small"
         color="warning"
         title="Add to favorites"
-        onClick={() => toggleFavorite(props)}
+        onClick={() => toggleFavorite(movie)}
     >
-        {isFavorite ? <Star /> : <StarBorder />}
+        {isFavoriteMovie ? <Star /> : <StarBorder />}
     </IconButton>
 }
 

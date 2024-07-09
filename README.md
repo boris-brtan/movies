@@ -10,5 +10,5 @@ npm run serve # starts standalone app for development use
 npm run lint # liner for code base
 npm run lint-fix # automaticaly fixes linter foundings
 npm run test # starts application unit testing
-npm run coverage # starts application unit testing with output coverage
+npm run test-coverage # starts application unit testing with output coverage
 ```
